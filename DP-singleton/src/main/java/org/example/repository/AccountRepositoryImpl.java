@@ -7,37 +7,50 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class AccountRepositoryImpl implements AccountRepository {
-    private Map<Long, BankAccount> longBankAccountMap = new HashMap<>();
-    private int AccountsCount = 0;
+    private Map<Long, BankAccount> bankAccountMap = new HashMap<>();
+    private long accountsCount = 0;
     @Override
     public BankAccount save(BankAccount bankAccount) {
-        return null;
+        Long accountId=++accountsCount;
+        bankAccount.setAccountId(accountId);
+        bankAccountMap.put(accountId, bankAccount);
+        return bankAccount;
     }
 
     @Override
     public List<BankAccount> findAll() {
-        return null;
+        return bankAccountMap.values().stream().toList();
     }
 
     @Override
     public Optional<BankAccount> findById(Long accountId) {
-        return Optional.empty();
+        BankAccount bankAccount = bankAccountMap.get(accountId);
+        if (bankAccount == null) return Optional.empty();
+        else return Optional.of(bankAccount);
     }
 
     @Override
     public List<BankAccount> searchAccounts(Predicate<BankAccount> predicate) {
-        return null;
+        return bankAccountMap.values().stream().filter(predicate).collect(Collectors.toList());
     }
 
     @Override
     public BankAccount update(BankAccount bankAccount) {
-        return null;
+        bankAccountMap.put(bankAccount.getAccountId(), bankAccount);
+        return bankAccount;
     }
 
     @Override
-    public void delete(Long AccountId) {
+    public void delete(Long accountId) {
+        bankAccountMap.remove(accountId);
+    }
 
+    public void populateData(){
+        for (int i = 0; i < 10; i++){
+            BankAccount bankAccount;
+        }
     }
 }
